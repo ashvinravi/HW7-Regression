@@ -21,7 +21,8 @@ def main():
             'Plain chest X-ray (procedure)',
             'Low Density Lipoprotein Cholesterol',
             'Creatinine',
-            'AGE_DIAGNOSIS'
+            'AGE_DIAGNOSIS',
+
         ],
         split_percent=0.8,
         split_seed=42
@@ -35,9 +36,9 @@ def main():
 
     # For testing purposes, once you've added your code.
     # CAUTION: hyperparameters have not been optimized.
-    # log_model = logreg.LogisticRegressor(num_feats=6, learning_rate=0.00001, tol=0.01, max_iter=10, batch_size=10)
-    # log_model.train_model(X_train, y_train, X_val, y_val)
-    # log_model.plot_loss_history()
+    log_model = logreg.LogisticRegressor(num_feats=6, learning_rate=0.1, tol=0.01, max_iter=10000, batch_size=10)
+    log_model.train_model(X_train, y_train, X_val, y_val)
+    log_model.plot_loss_history()
 
 # Run main function if run as script
 if __name__ == "__main__":

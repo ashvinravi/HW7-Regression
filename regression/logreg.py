@@ -1,5 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd 
+from sklearn.model_selection import train_test_split
+
 
 # Base class for generic regressor
 # (this is already complete!)
@@ -117,6 +120,9 @@ class LogisticRegressor(BaseRegressor):
             batch_size=batch_size
         )
     
+    def _sigmoid(self, x):
+        return 1 / (1 + np.exp(-x))
+    
     def make_prediction(self, X) -> np.array:
         """
         TODO: Implement logistic function to get estimates (y_pred) for input X values. The logistic
@@ -129,7 +135,13 @@ class LogisticRegressor(BaseRegressor):
         Returns: 
             The predicted labels (y_pred) for given X.
         """
-        pass
+        # take dot product between X and weights for each feature
+        y_hat = np.dot(X, self.W)
+        # transform y hat by feeding into sigmoid function. This returns the probability of y being 1. 
+        y_pred = self._sigmoid(y_hat)
+        return y_pred
+
+
     
     def loss_function(self, y_true, y_pred) -> float:
         """
@@ -143,7 +155,13 @@ class LogisticRegressor(BaseRegressor):
         Returns: 
             The mean loss (a single number).
         """
-        pass
+        epsilon=1e-9
+        # If y = 0, then your left side equals 0. 
+        y0 = y_true * np.log(y_pred + epsilon)
+        # If y = 1, then your right side equals 0. 
+        y1 = (1 - y_true) * np.log(1 - y_pred + epsilon)
+
+        return -np.mean(y0 + y1)
         
     def calculate_gradient(self, y_true, X) -> np.ndarray:
         """
@@ -156,5 +174,8 @@ class LogisticRegressor(BaseRegressor):
 
         Returns: 
             Vector of gradients.
-        """
-        pass
+        """   
+        # Gradient of the loss is equal to the derivative (slope) of loss function curve
+        # calculate y_pred using sigmoid function, X, and present weights.  
+        gradients = np.dot(X.T, self._sigmoid(np.dot(X, self.W)) - y_true) / len(y_true)
+        return gradients
